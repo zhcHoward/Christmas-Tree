@@ -5,8 +5,6 @@ import random
 import sys
 import time
 
-last_layer = None
-total_lines = 3
 init = True
 tree = []
 
@@ -46,46 +44,37 @@ COLOR_POS = 0.2
 
 
 def christmas_tree(layers):
-    """
-    Print a christmas tree of the given height.
-    """
+    global tree
+    tree = []
     for layer in range(layers):
         generate_layer(layer)
 
-    print_tree()
+    print_tree(layers)
 
 
 def generate_layer(layer):
-    global last_layer, total_lines
-    if not last_layer:
-        start = 1
-        level = 3
-    else:
-        start = last_layer[0] - 2
-        level = last_layer[1] + 1
-
-    cnt = start
+    length = layer * layer + layer + 1
+    level = layer + 3
     for _ in range(level):
         line = ""
-        for _ in range(cnt):
+        for _ in range(length):
             colored = random.random() < COLOR_POS
             if colored:
                 color = random.choice(COLORS)
                 line += color + "O" + CEND
             else:
                 line += "*"
-        tree.append((line, cnt))
-        cnt += 2
-
-    last_layer = (cnt - 2, level)
-    total_lines += level
+        tree.append((line, length))
+        length += 2
 
 
-def print_tree():
-    global init, total_lines
-    max_width = last_layer[0]
+def print_tree(layers):
+    layers -= 1
+    max_width = tree[-1][1]
+    total_lines = len(tree) + 3
+    global init
     content = ""
-    for ln, t in enumerate(tree):
+    for t in tree:
         spaces = (max_width - t[1]) // 2
         content += " " * spaces + t[0] + "\n"
 
@@ -105,7 +94,4 @@ if __name__ == "__main__":
     layers = int(sys.argv[1])
     while True:
         christmas_tree(layers)
-        last_layer = None
-        tree = []
         time.sleep(1)
-        total_lines = 3
