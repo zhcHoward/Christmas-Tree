@@ -74,9 +74,9 @@ def print_tree(layers):
     total_lines = len(tree) + 3
     global init
     content = ""
-    for t in tree:
-        spaces = (max_width - t[1]) // 2
-        content += " " * spaces + t[0] + "\n"
+    for leaves, length in tree:
+        spaces = (max_width - length) // 2
+        content += " " * spaces + leaves + "\n"
 
     spaces = (max_width - 5) // 2
     for i in range(2):
@@ -92,6 +92,11 @@ def print_tree(layers):
 
 if __name__ == "__main__":
     layers = int(sys.argv[1])
-    while True:
-        christmas_tree(layers)
-        time.sleep(1)
+
+    try:
+        while True:
+            christmas_tree(layers)
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("\rMerry Christmas!")
+        sys.exit(0)
