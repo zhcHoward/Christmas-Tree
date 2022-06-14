@@ -5,41 +5,12 @@ import random
 import sys
 import time
 
+from blessed import Terminal
+
 init = True
 tree = []
-
-CEND = "\033[0m"
-CBLACK = "\033[30m"
-CRED = "\033[31m"
-CGREEN = "\033[32m"
-CYELLOW = "\033[33m"
-CBLUE = "\033[34m"
-CVIOLET = "\033[35m"
-CBEIGE = "\033[36m"
-CWHITE = "\033[37m"
-CGREY = "\033[90m"
-CRED2 = "\033[91m"
-CGREEN2 = "\033[92m"
-CYELLOW2 = "\033[93m"
-CBLUE2 = "\033[94m"
-CVIOLET2 = "\033[95m"
-CBEIGE2 = "\033[96m"
-CWHITE2 = "\033[97m"
-COLORS = [
-    CRED,
-    CGREEN,
-    CYELLOW,
-    CBLUE,
-    CVIOLET,
-    CBEIGE,
-    CGREY,
-    CRED2,
-    CGREEN2,
-    CYELLOW2,
-    CBLUE2,
-    CVIOLET2,
-    CBEIGE2,
-]
+t = Terminal()
+COLORS = ("red", "green", "yellow", "blue", "magenta", "cyan")
 COLOR_POS = 0.2
 
 
@@ -61,7 +32,7 @@ def generate_layer(layer):
             colored = random.random() < COLOR_POS
             if colored:
                 color = random.choice(COLORS)
-                line += color + "O" + CEND
+                line += getattr(t, color)("O")
             else:
                 line += "*"
         tree.append((line, length))
@@ -79,7 +50,7 @@ def print_tree(layers):
         content += " " * spaces + leaves + "\n"
 
     spaces = (max_width - 5) // 2
-    for i in range(2):
+    for _ in range(2):
         content += " " * spaces + "|   |\n"
 
     content += " " * spaces + "|___|"
@@ -87,12 +58,11 @@ def print_tree(layers):
         print(content)
         init = False
     else:
-        print("\033[F" * total_lines + content)
+        print(t.move_up * total_lines + content)
 
 
 if __name__ == "__main__":
     layers = int(sys.argv[1])
-
     try:
         while True:
             christmas_tree(layers)
